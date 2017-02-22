@@ -1,0 +1,7 @@
+version: '2'
+services:
+  django:
+    image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/django:${PROJECT_VERSION}
+    build: ./images/django
+    volumes:
+      - '../api:/code'
