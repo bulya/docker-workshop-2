@@ -1,2 +1,4 @@
 .idea/
 *.pyc
+docker/backups/
+!docker/backups/.gitkeep
