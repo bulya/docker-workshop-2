@@ -11,6 +11,18 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import environ
+
+env = environ.Env()
+
+# Reading .env file
+environ.Env.read_env()
+
+PREFIX_ENV_APP = 'API'
+
+
+def get_env_name(name):
+    return '%s_%s' % (PREFIX_ENV_APP, name)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -76,10 +88,7 @@ WSGI_APPLICATION = 'ws2.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    'default': env.db(get_env_name('DATABASE_URL')),
 }
 
 
