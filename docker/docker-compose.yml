@@ -3,5 +3,7 @@ services:
   django:
     image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/django:${PROJECT_VERSION}
     build: ./images/django
+    environment:
+      - LOCAL_USER_ID=${LOCAL_USER_ID}
     volumes:
       - '../api:/code'
