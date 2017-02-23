@@ -1,0 +1,15 @@
+version: '2'
+services:
+  postgres_backup:
+    extends:
+      file: docker-compose.yml
+      service: postgres
+    command: backup
+    environment:
+      - LOCAL_USER_ID=${LOCAL_USER_ID}
+      - POSTGRES_HOST=postgres
+    entrypoint: /scripts/docker-entrypoint.sh
+    volumes:
+      - './backups:/backups'
+    depends_on:
+      - postgres
