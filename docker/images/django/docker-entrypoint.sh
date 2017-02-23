@@ -18,4 +18,8 @@ if [ "$API_POSTGRES_WAIT" == true ]; then
     done
 fi
 
+if [ "$API_POSTGRES_MIGRATE" == true ]; then
+    gosu user python manage.py migrate
+fi
+
 gosu user "$@"
