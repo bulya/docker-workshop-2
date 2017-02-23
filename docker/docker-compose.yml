@@ -12,6 +12,7 @@ services:
       - LOCAL_USER_ID=${LOCAL_USER_ID}
       - API_DATABASE_URL=psql://api:api@postgres:5432/api_db
       - API_POSTGRES_WAIT=true
+      - API_POSTGRES_MIGRATE=true
     volumes:
       - '../api:/code'
     ports:
