@@ -11,10 +11,15 @@ RUN apt-get update \
     && rm /usr/local/bin/gosu.asc \
     && chmod +x /usr/local/bin/gosu
 
-ADD ./docker-entrypoint.sh /scripts/docker-entrypoint.sh
+ADD ./docker/images/django/docker-entrypoint.sh /scripts/docker-entrypoint.sh
 RUN chmod +x /scripts/docker-entrypoint.sh
 
 RUN pip install django==1.10.5
+
+RUN mkdir /code
+ADD ./api/requirements /code/requirements
+
+RUN pip install -r /code/requirements/dev.txt
 
 WORKDIR /code
 
