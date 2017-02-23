@@ -14,8 +14,6 @@ RUN apt-get update \
 ADD ./docker/images/django/docker-entrypoint.sh /scripts/docker-entrypoint.sh
 RUN chmod +x /scripts/docker-entrypoint.sh
 
-RUN pip install django==1.10.5
-
 RUN mkdir /code
 ADD ./api/requirements /code/requirements
 
