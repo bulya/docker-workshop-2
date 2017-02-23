@@ -28,3 +28,15 @@ services:
       - POSTGRES_PASSWORD=api
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  django_sshd:
+    image: haos616/sshd:latest
+    privileged: true
+    pid: host
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    environment:
+      - DOCKER_CONTAINER=${COMPOSE_PROJECT_NAME}_django_1
+    ports:
+      - '127.0.0.1:22358:22'
+    depends_on:
+      - django
