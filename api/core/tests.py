@@ -9,6 +9,8 @@ class EnailTests(APITestCase):
     def test_get_time(self):
         url = reverse('api-email')
         self.assertEqual(len(mail.outbox), 0)
+        import pdb
+        pdb.set_trace()
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, 'Email sent')
