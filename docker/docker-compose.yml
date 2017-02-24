@@ -53,8 +53,11 @@ services:
       - API_POSTGRES_WAIT=true
       - API_CELERY_BROKER_URL=redis://redis:6379/1
       - API_CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - CELERY_RDB_HOST=0.0.0.0
     volumes:
       - '../api:/code'
+    ports:
+      - '127.0.0.1:6899-6910:6899-6910'
     depends_on:
       - postgres
       - redis
