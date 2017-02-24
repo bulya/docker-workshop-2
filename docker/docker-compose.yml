@@ -81,3 +81,15 @@ services:
       - '127.0.0.1:80:80'
     depends_on:
       - django
+  site:
+    image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/site:${PROJECT_VERSION}
+    build:
+      context: ..
+      dockerfile: ./docker/images/site/Dockerfile
+    ports:
+      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:35729:35729'
+    volumes:
+      - '../site:/code'
+      - '/code/node_modules/'
+    command: gulp
