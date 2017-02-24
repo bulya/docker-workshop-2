@@ -19,11 +19,6 @@ ADD ./api/requirements /code/requirements
 
 RUN pip install -r /code/requirements/dev.txt
 
-RUN mkdir /code
-ADD ./api/requirements /code/requirements
-
-RUN pip install -r /code/requirements/dev.txt
-
 WORKDIR /code
 
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]

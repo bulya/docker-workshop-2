@@ -16,6 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from core.views import SendEmailAPIView
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/v1/email', SendEmailAPIView.as_view(), name='api-email'),
 ]
