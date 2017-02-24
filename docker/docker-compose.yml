@@ -16,6 +16,7 @@ services:
       - API_POSTGRES_MIGRATE=true
       - API_CELERY_BROKER_URL=redis://redis:6379/1
       - API_CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - API_EMAIL_HOST=mailhog
     volumes:
       - '../api:/code'
     ports:
@@ -23,6 +24,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - mailhog
   postgres:
     image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/postgres:${PROJECT_VERSION}
     build: ./images/postgres
@@ -53,6 +55,7 @@ services:
       - API_POSTGRES_WAIT=true
       - API_CELERY_BROKER_URL=redis://redis:6379/1
       - API_CELERY_RESULT_BACKEND=redis://redis:6379/1
+      - API_EMAIL_HOST=mailhog
     volumes:
       - '../api:/code'
     depends_on:
@@ -62,3 +65,28 @@ services:
     image: redis:3.2.8
     volumes:
       - redis_data:/data
+  mailhog:
+     image: mailhog/mailhog
+     ports:
+       - "127.0.0.1:8025:8025"
+  nginx:
+     image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/nginx:${PROJECT_VERSION}
+     build: ./images/nginx
+     environment:
+       - API_DEV=true
+     ports:
+       - '127.0.0.1:80:80'
+     depends_on:
+       - django
+  site:
+    image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/site:${PROJECT_VERSION}
+    build:
+      context: ..
+      dockerfile: ./docker/images/site/Dockerfile
+    ports:
+      - '127.0.0.1:3000:3000'
+      - '127.0.0.1:35729:35729'
+    volumes:
+      - '../site:/code'
+      - '/code/node_modules/'
+    command: gulp
