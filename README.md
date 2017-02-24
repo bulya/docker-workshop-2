@@ -7,7 +7,9 @@ $ git clone git@github.com:haos616/docker-workshop-2.git
 ```
 
 ## 2. Build django image
+
 > Run docker-compose in `docker` folder
+
 ```bash
 $ docker-compose build
 ```
@@ -37,6 +39,7 @@ $ docker-compose run django django-admin startproject ws2 /code
 ```
 
 > Project created but have permission problem. Files and directory created root user
+
 ```bash
 $ ls -la api
 total 16
