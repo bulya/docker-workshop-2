@@ -1,6 +1,7 @@
 version: '2'
 volumes:
   postgres_data: {}
+  redis_data: {}
 services:
   django:
     image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/django:${PROJECT_VERSION}
@@ -13,12 +14,15 @@ services:
       - API_DATABASE_URL=psql://api:api@postgres:5432/api_db
       - API_POSTGRES_WAIT=true
       - API_POSTGRES_MIGRATE=true
+      - API_CELERY_BROKER_URL=redis://redis:6379/1
+      - API_CELERY_RESULT_BACKEND=redis://redis:6379/1
     volumes:
       - '../api:/code'
     ports:
       - '127.0.0.1:8000:8000'
     depends_on:
       - postgres
+      - redis
   postgres:
     image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/postgres:${PROJECT_VERSION}
     build: ./images/postgres
@@ -40,3 +44,21 @@ services:
       - '127.0.0.1:22358:22'
     depends_on:
       - django
+  celery_worker:
+    image: ${HUB_HOST}/${COMPOSE_PROJECT_NAME}/django:${PROJECT_VERSION}
+    command: celery worker -A celery_app -l debug
+    environment:
+      - LOCAL_USER_ID=${LOCAL_USER_ID}
+      - API_DATABASE_URL=psql://api:api@postgres:5432/api_db
+      - API_POSTGRES_WAIT=true
+      - API_CELERY_BROKER_URL=redis://redis:6379/1
+      - API_CELERY_RESULT_BACKEND=redis://redis:6379/1
+    volumes:
+      - '../api:/code'
+    depends_on:
+      - postgres
+      - redis
+  redis:
+    image: redis:3.2.8
+    volumes:
+      - redis_data:/data
