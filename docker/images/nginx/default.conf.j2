@@ -1,0 +1,38 @@
+upstream backend {
+    server django:8000 fail_timeout=5s max_fails=5;
+}
+
+server {
+    listen 80;
+
+    gzip on;
+    gzip_min_length 1000;
+    gzip_disable "msie6";
+    gzip_comp_level 5;
+    gzip_http_version 1.0;
+    gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript;
+
+    location /media/ {
+        alias /public/media/;
+        expires 367d;
+        access_log off;
+        add_header Cache-Control public;
+    }
+
+    {% if not API_DEV %}
+    location /static/ {
+        alias /public/static/;
+        expires 367d;
+        access_log off;
+        add_header Cache-Control public;
+    }
+    {% endif %}
+
+    location / {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header REMOTE_ADDR $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
